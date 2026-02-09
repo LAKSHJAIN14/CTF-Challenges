@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  lovenotes:
+    build: .
+    ports:
+      - "8012:8012"
+    environment:
+      - APPURL=http://localhost:8012/
+      - APPFLAG=n0obCTF{l0v3_n0t3s_cl1pb04rd_h1j4ck}
+      - APPLIMITTIME=60
+      - APPLIMIT=5
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true

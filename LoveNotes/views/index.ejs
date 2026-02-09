@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Love Notes</title>
+
+    <script nonce="<%= nonce %>" src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <script nonce="<%= nonce %>" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
+
+    <style nonce="<%= nonce %>">
+        body { background-color: #ffe6f2; font-family: sans-serif; text-align: center; color: #d63384; }
+        .card { background: white; width: 60%; margin: 30px auto; padding: 20px; border: 2px dashed #ffb3d9; border-radius: 15px; }
+        .share-btn { 
+            border: 1px solid #ff66b2; background: white; color: #ff66b2; 
+            padding: 5px 10px; cursor: pointer; border-radius: 5px; margin-bottom: 20px; 
+        }
+
+        .blur { filter: blur(8px); background: #eee; padding: 15px; user-select: none; transition: 0.3s; }
+        .blur.revealed { filter: blur(0); background: white; border: 1px solid #ffccdd; }
+
+        #reveal-btn { 
+            background: #ff3366; color: white; border: none; padding: 15px 30px; 
+            font-size: 18px; border-radius: 50px; cursor: pointer; margin-top: 20px; 
+        }
+
+        #raw-note {
+            display:none;
+        }    
+
+        #note-display {
+            text-align: left; margin-bottom: 20px;
+        }
+
+        .off-screen {
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+        opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>💌 Secret Note </h1>
+    <h3>Share secret and L0v3 N0t3s to your Crush</h3>
+
+    <div class="card">
+        <div id="raw-note"><%= note %></div>
+
+        <div id="note-display"></div>
+
+        <div id="hidden-content" class="blur"><%= secret %></div>
+    </div>
+  <!-- was planning to add auth and everything but was not able to do so putting this off screen, Surely you can't do anything with this right ? -->
+    <div id="cookie" class="off-screen"><%= cookie %></div>
+
+    <button id="reveal-btn">🔓 Reveal Secret</button>
+
+    <button class="share-btn" data-clipboard-text="<%= shareLink %>">
+        🔗 Copy Link to Note
+    </button>
+
+
+
+    <script nonce="<%= nonce %>">
+        new ClipboardJS('.share-btn');
+        const dirtyHTML = document.getElementById('raw-note').innerText;
+        // DOMPurify has been used now surely you can't do shit right ?? but I am kind enough to allow some tags :)
+        const cleanHTML = DOMPurify.sanitize(dirtyHTML, {
+            ALLOWED_TAGS: ['a', 'div', 'span', 'b', 'i', 'p', 'br'],
+            ADD_ATTR: ['tabindex','target','name','aria-label','role','title','rel']
+        });
+        document.getElementById('note-display').innerHTML = cleanHTML;
+
+        document.getElementById('reveal-btn').addEventListener('click', () => {
+            document.getElementById('hidden-content').classList.add('revealed');
+        });
+    </script>
+</body>
+</html>
